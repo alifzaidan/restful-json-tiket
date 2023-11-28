@@ -29,6 +29,7 @@ function filter($data)
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $data = json_decode($postdata);
     $id_tiket = $data->id_tiket;
     $id_event = $data->id_event;
     $kategori = $data->kategori;
@@ -38,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($aksi == 'tambah') {
         $data2 = array(
-            'id_tiket' => $id_tiket,
             'id_event' => $id_event,
             'kategori' => $kategori,
             'harga' => $harga,

@@ -29,6 +29,7 @@ function filter($data)
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $data = json_decode($postdata);
     $id_event = $data->id_event;
     $nama_event = $data->nama_event;
     $harga_awal = $data->harga_awal;
@@ -40,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($aksi == 'tambah') {
         $data2 = array(
-            'id_event' => $id_event,
             'nama_event' => $nama_event,
             'harga_awal' => $harga_awal,
             'tanggal' => $tanggal,
@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'venue' => $venue,
             'deskripsi' => $deskripsi,
         );
-
         $abc->tambah_event($data2);
     } elseif ($aksi == 'ubah') {
         $data2 = array(
@@ -61,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'deskripsi' => $deskripsi,
         );
         $abc->ubah_event($data2);
-    } elseif ($aksi == 'hapus') { // Ubah '=' menjadi '==' untuk memeriksa kesamaan
+    } elseif ($aksi == 'hapus') {
         $abc->hapus_event($id_event);
     }
 

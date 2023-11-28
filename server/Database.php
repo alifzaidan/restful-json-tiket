@@ -144,32 +144,32 @@ class Database
 
     public function tambah_event($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (id_event, nama_event, harga_awal, tanggal, jam, venue, deskripsi) values (?,?,?,?,?,?,?)");
-        $query->execute(array($data['id_event'], $data['nama_event'], $data['harga_awal'], $data['tanggal'], $data['jam'], $data['venue'], $data['deskripsi']));
+        $query = $this->conn->prepare("insert ignore into event (nama_event, harga_awal, tanggal, jam, venue, deskripsi) values (?,?,?,?,?,?)");
+        $query->execute(array($data['nama_event'], $data['harga_awal'], $data['tanggal'], $data['jam'], $data['venue'], $data['deskripsi']));
         $query->closeCursor();
         unset($data);
     }
 
     public function tambah_tiket($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (id_tiket, id_event, kategori, harga, jumlah) values (?,?,?,?,?)");
-        $query->execute(array($data['id_tiket'], $data['id_event'], $data['kategori'], $data['harga'], $data['jumlah']));
+        $query = $this->conn->prepare("insert ignore into event (id_event, kategori, harga, jumlah) values (?,?,?,?)");
+        $query->execute(array($data['id_event'], $data['kategori'], $data['harga'], $data['jumlah']));
         $query->closeCursor();
         unset($data);
     }
 
     public function tambah_pengguna($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (id_pengguna, nama, username, email, no_telp, password) values (?,?,?,?,?,?)");
-        $query->execute(array($data['id_pengguna'], $data['nama'], $data['username'], $data['email'], $data['no_telp'], $data['password']));
+        $query = $this->conn->prepare("insert ignore into event (nama, username, email, no_telp, password) values (?,?,?,?,?)");
+        $query->execute(array($data['nama'], $data['username'], $data['email'], $data['no_telp'], $data['password']));
         $query->closeCursor();
         unset($data);
     }
 
     public function tambah_pesanan($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (id_pesanan, id_pengguna, id_event, id_tiket1, jumlah_tiket1, id_tiket2, jumlah_tiket2, id_tiket3, jumlah_tiket3, id_tiket4, jumlah_tiket4, total_harga, tgl_pemesanan) values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $query->execute(array($data['id_pesanan'], $data['id_pengguna'], $data['id_event'], $data['id_tiket1'], $data['jumlah_tiket1'], $data['id_tiket2'], $data['jumlah_tiket2'], $data['id_tiket3'], $data['jumlah_tiket3'], $data['id_tiket4'], $data['jumlah_tiket4'], $data['total_harga'], $data['tgl_pemesanan']));
+        $query = $this->conn->prepare("insert ignore into event (id_pengguna, id_event, id_tiket1, jumlah_tiket1, id_tiket2, jumlah_tiket2, id_tiket3, jumlah_tiket3, id_tiket4, jumlah_tiket4, total_harga, tgl_pemesanan) values (?,?,?,?,?,?,?,?,?,?,?,?)");
+        $query->execute(array($data['id_pengguna'], $data['id_event'], $data['id_tiket1'], $data['jumlah_tiket1'], $data['id_tiket2'], $data['jumlah_tiket2'], $data['id_tiket3'], $data['jumlah_tiket3'], $data['id_tiket4'], $data['jumlah_tiket4'], $data['total_harga'], $data['tgl_pemesanan']));
         $query->closeCursor();
         unset($data);
     }

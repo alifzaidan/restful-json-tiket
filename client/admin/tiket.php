@@ -1,14 +1,16 @@
 <?php
-include '../koneksi.php';
-session_start();
-$username = $_SESSION['username'];
-if (!isset($username)) {
-    $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
-    header('Location: login.php');
-}
-$safe_username = mysqli_real_escape_string($koneksi, $username);
-$result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
-$pengguna = mysqli_fetch_assoc($result);
+error_reporting(1);
+include "../Client.php";
+
+// session_start();
+// $username = $_SESSION['username'];
+// if (!isset($username)) {
+//     $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
+//     header('Location: login.php');
+// }
+// $safe_username = mysqli_real_escape_string($koneksi, $username);
+// $result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
+// $pengguna = mysqli_fetch_assoc($result);
 
 $no = 1;
 $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_event=event.id_event");
@@ -31,13 +33,11 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
     <nav class="navbar navbar-expand-lg border-bottom sticky-top" style="background-color: #304F6D;">
         <div class="container py-1">
             <a class="navbar-brand text-white" href="../index.php">TicketEase</a>
-            <?php
-            if ($_SESSION['username'] == 'admin') :
-            ?>
-                <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-                    <i class="bi bi-list"></i>
-                </button>
-            <?php endif ?>
+
+            <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+                <i class="bi bi-list"></i>
+            </button>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -45,36 +45,6 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                 <form class="d-flex mx-auto" role="search">
                     <input class="form-control me-2" style="width: 500px;" type="search" id="searchInput" placeholder="Cari Event" aria-label="Search" autocomplete="off" />
                 </form>
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <?= $pengguna['nama'] ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end mt-3">
-                            <li>
-                                <p class="h6 m-3 text-center"><?= $pengguna['username'] ?></p>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-
-                            <?php
-                            if ($_SESSION['username'] != 'admin') :
-                            ?>
-                                <li>
-                                    <a class="dropdown-item" href="riwayat.php">Riwayat</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                            <?php endif ?>
-
-                            <li>
-                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>
@@ -128,6 +98,7 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                                             </div>
                                             <div class="modal-body">
                                                 <form class="user d-flex flex-column gap-2" action="tiket-edit-controller.php" method="post">
+                                                    <input type="hidden" name="aksi" value="ubah" />
                                                     <input type="hidden" class="form-control" name="id_tiket" value="<?= $tiket["id_tiket"] ?>">
                                                     <div class="form-group">
                                                         <select class="form-select" aria-label="Nama Event" name="id_event" required>
@@ -207,6 +178,7 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                 </div>
                 <div class="modal-body">
                     <form class="user d-flex flex-column gap-2" action="tiket-tambah-controller.php" method="post">
+                        <input type="hidden" name="aksi" value="tambah" />
                         <div class="form-group">
                             <select class="form-select" aria-label="Nama Event" name="id_event" required>
                                 <option>Pilih Event</option>

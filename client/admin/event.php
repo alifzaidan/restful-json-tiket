@@ -1,7 +1,6 @@
 <?php
 error_reporting(1);
 include "../Client.php";
-include '../koneksi.php';
 
 // session_start();
 // $username = $_SESSION['username'];
@@ -35,13 +34,11 @@ $data_event = $abc->tampil_semua_event();
     <nav class="navbar navbar-expand-lg border-bottom sticky-top" style="background-color: #304F6D;">
         <div class="container py-1">
             <a class="navbar-brand text-white" href="../index.php">TicketEase</a>
-            <?php
-            if ($_SESSION['username'] == 'admin') :
-            ?>
-                <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-                    <i class="bi bi-list"></i>
-                </button>
-            <?php endif ?>
+
+            <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+                <i class="bi bi-list"></i>
+            </button>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -185,6 +182,7 @@ $data_event = $abc->tampil_semua_event();
                 <div class="modal-body">
                     <input type="hidden" name="aksi" value="tambah" />
                     <form class="user d-flex flex-column gap-2" action="../prosesevent.php" method="post">
+                        <input type="hidden" name="aksi" value="tambah" />
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Nama Event" name="nama_event" required>
                         </div>

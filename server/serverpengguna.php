@@ -29,6 +29,7 @@ function filter($data)
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $data = json_decode($postdata);
     $id_pengguna = $data->id_pengguna;
     $nama = $data->nama;
     $username = $data->username;
@@ -39,14 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($aksi == 'tambah') {
         $data2 = array(
-            'id_pengguna' => $id_pengguna,
             'nama' => $nama,
             'username' => $username,
             'email' => $email,
             'no_telp' => $no_telp,
             'password' => $password,
         );
-
         $abc->tambah_pengguna($data2);
     } elseif ($aksi == 'ubah') {
         $data2 = array(
