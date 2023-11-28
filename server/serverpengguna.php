@@ -69,6 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id_pengguna = filter($_GET['id_pengguna']); // Ubah 'id pengguna' menjadi 'id_pengguna'
         $data = $abc->tampil_pengguna($id_pengguna); // Ubah 'tampil data' menjadi 'tampil_data'
         echo json_encode($data);
+    } else if (($_GET['aksi'] == 'tampil') and (isset($_GET['username']))) {
+        $username = filter($_GET['username']); // Ubah 'id pengguna' menjadi 'username'
+        $data = $abc->tampil_pengguna_byuser($username); // Ubah 'tampil data' menjadi 'tampil_data'
+        echo json_encode($data);
     } else {
         $pengguna = $abc->tampil_semua_pengguna();
         echo json_encode($pengguna);

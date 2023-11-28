@@ -109,6 +109,19 @@ class Client
         unset($id_pengguna, $client, $response, $data);
     }
 
+    public function tampil_pengguna_byuser($username)
+    {
+        $username = $this->filter($username);
+        $client = curl_init($this->url . "serverpengguna.php?aksi=tampil&username=" . $username);
+        curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($client);
+        curl_close($client);
+        $data = json_decode($response);
+        return $data;
+
+        unset($username, $client, $response, $data);
+    }
+
     public function tampil_pesanan($id_pesanan)
     {
         $id_pesanan = $this->filter($id_pesanan);
@@ -398,5 +411,5 @@ class Client
     }
 }
 
-$url = 'http://192.168.56.51/restful-json-toko/server/';
+$url = 'http://192.168.137.1/restful-json-tiket/server/';
 $abc = new Client($url);

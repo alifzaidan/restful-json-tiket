@@ -58,6 +58,18 @@ class Database
         unset($id_pengguna, $data);
     }
 
+    public function tampil_pengguna_byuser($username)
+    {
+        $query = $this->conn->prepare("select id_pengguna, nama, username, email, no_telp, password from pengguna where username=?");
+        $query->execute(array($username));
+        // mengambil satu data dengan fetch
+        $data = $query->fetch(PDO::FETCH_ASSOC);
+        return $data;
+        // hapus variable dari memory
+        $query->closeCursor();
+        unset($username, $data);
+    }
+
     public function tampil_pesanan($id_event)
     {
         $query = $this->conn->prepare("select id_pesanan, id_pengguna, id_event, id_tiket1, jumlah_tiket1, id_tiket2, jumlah_tiket2, id_tiket3, jumlah_tiket3, id_tiket4, jumlah_tiket4, total_harga, tgl_pemesanan from pesanan where id_pesanan=?");
