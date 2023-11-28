@@ -54,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'username' => $username,
             'email' => $email,
             'no_telp' => $no_telp,
-            'password' => $password,
         );
         $abc->ubah_pengguna($data2);
     } elseif ($aksi == 'hapus') { // Ubah '=' menjadi '==' untuk memeriksa kesamaan

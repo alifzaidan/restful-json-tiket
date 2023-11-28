@@ -51,7 +51,7 @@ class Database
         $query = $this->conn->prepare("select id_tiket, id_event, kategori, harga, jumlah from tiket where id_event=?");
         $query->execute(array($id_event));
         // mengambil satu data dengan fetch
-        $data = $query->fetch(PDO::FETCH_ASSOC);
+        $data = $query->fetchAll(PDO::FETCH_ASSOC);
         return $data;
         // hapus variable dari memory
         $query->closeCursor();
@@ -109,7 +109,7 @@ class Database
 
     public function tampil_semua_tiket()
     {
-        $query = $this->conn->prepare("select id_tiket, id_event, kategori, harga, jumlah from tiket order by id_tiket");
+        $query = $this->conn->prepare("select tiket.id_tiket, tiket.id_event, event.nama_event, tiket.kategori, tiket.harga, tiket.jumlah from tiket,event where tiket.id_event=event.id_event order by id_tiket");
         $query->execute();
         // mengambil banyak data dengan fetchAll
         $data = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -131,7 +131,9 @@ class Database
 
     public function tampil_semua_pesanan()
     {
-        $query = $this->conn->prepare("select id_pesanan, id_pengguna, id_event, id_tiket1, jumlah_tiket1, id_tiket2, jumlah_tiket2, id_tiket3, jumlah_tiket3, id_tiket4, jumlah_tiket4, total_harga, tgl_pemesanan from pesanan order by id_pesanan");
+        $query = $this->conn->prepare("SELECT pesanan.id_pesanan, pengguna.nama, event.nama_event, pesanan.id_tiket1, pesanan.id_tiket2, pesanan.id_tiket3, pesanan.id_tiket4, pesanan.jumlah_tiket1, pesanan.jumlah_tiket2, pesanan.jumlah_tiket3, pesanan.jumlah_tiket4, pesanan.total_harga, pesanan.tgl_pemesanan ,(jumlah_tiket1 + jumlah_tiket2 + jumlah_tiket3 + jumlah_tiket4) AS jumlah_tiket FROM pesanan
+        JOIN event ON pesanan.id_event = event.id_event
+        JOIN pengguna ON pesanan.id_pengguna = pengguna.id_pengguna");
         $query->execute();
         // mengambil banyak data dengan fetchAll
         $data = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -152,7 +154,7 @@ class Database
 
     public function tambah_tiket($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (id_event, kategori, harga, jumlah) values (?,?,?,?)");
+        $query = $this->conn->prepare("insert ignore into tiket (id_event, kategori, harga, jumlah) values (?,?,?,?)");
         $query->execute(array($data['id_event'], $data['kategori'], $data['harga'], $data['jumlah']));
         $query->closeCursor();
         unset($data);
@@ -160,7 +162,7 @@ class Database
 
     public function tambah_pengguna($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (nama, username, email, no_telp, password) values (?,?,?,?,?)");
+        $query = $this->conn->prepare("insert ignore into pengguna (nama, username, email, no_telp, password) values (?,?,?,?,?)");
         $query->execute(array($data['nama'], $data['username'], $data['email'], $data['no_telp'], $data['password']));
         $query->closeCursor();
         unset($data);
@@ -168,7 +170,7 @@ class Database
 
     public function tambah_pesanan($data)
     {
-        $query = $this->conn->prepare("insert ignore into event (id_pengguna, id_event, id_tiket1, jumlah_tiket1, id_tiket2, jumlah_tiket2, id_tiket3, jumlah_tiket3, id_tiket4, jumlah_tiket4, total_harga, tgl_pemesanan) values (?,?,?,?,?,?,?,?,?,?,?,?)");
+        $query = $this->conn->prepare("insert ignore into pesanan (id_pengguna, id_event, id_tiket1, jumlah_tiket1, id_tiket2, jumlah_tiket2, id_tiket3, jumlah_tiket3, id_tiket4, jumlah_tiket4, total_harga, tgl_pemesanan) values (?,?,?,?,?,?,?,?,?,?,?,?)");
         $query->execute(array($data['id_pengguna'], $data['id_event'], $data['id_tiket1'], $data['jumlah_tiket1'], $data['id_tiket2'], $data['jumlah_tiket2'], $data['id_tiket3'], $data['jumlah_tiket3'], $data['id_tiket4'], $data['jumlah_tiket4'], $data['total_harga'], $data['tgl_pemesanan']));
         $query->closeCursor();
         unset($data);
@@ -207,8 +209,8 @@ class Database
     public function ubah_pengguna($data)
     {
         try {
-            $query = $this->conn->prepare("UPDATE event SET nama=?, username=?, email=?, no_telp=?, password=? WHERE id_pengguna=?");
-            $query->execute(array($data['nama'], $data['username'], $data['email'], $data['no_telp'], $data['password'], $data['id_pengguna']));
+            $query = $this->conn->prepare("UPDATE pengguna SET nama=?, username=?, email=?, no_telp=? WHERE id_pengguna=?");
+            $query->execute(array($data['nama'], $data['username'], $data['email'], $data['no_telp'], $data['id_pengguna']));
             $query->closeCursor();
             unset($data);
         } catch (PDOException $e) {
@@ -221,7 +223,7 @@ class Database
     public function ubah_pesanan($data)
     {
         try {
-            $query = $this->conn->prepare("UPDATE event SET id_pengguna=?, id_event=?, id_tiket1=?, jumlah_tiket1=?, id_tiket2=?, jumlah_tiket2=?, id_tiket3=?, jumlah_tiket3=?, id_tiket4=?, jumlah_tiket4=?, total_harga=?, tgl_pemesanan=? WHERE id_pesanan=?");
+            $query = $this->conn->prepare("UPDATE pesanan SET id_pengguna=?, id_event=?, id_tiket1=?, jumlah_tiket1=?, id_tiket2=?, jumlah_tiket2=?, id_tiket3=?, jumlah_tiket3=?, id_tiket4=?, jumlah_tiket4=?, total_harga=?, tgl_pemesanan=? WHERE id_pesanan=?");
             $query->execute(array($data['id_pengguna'], $data['id_event'], $data['id_tiket1'], $data['jumlah_tiket1'], $data['id_tiket2'], $data['jumlah_tiket2'], $data['id_tiket3'], $data['jumlah_tiket3'], $data['id_tiket4'], $data['jumlah_tiket4'], $data['total_harga'], $data['tgl_pemesanan'], $data['id_pesanan']));
             $query->closeCursor();
             unset($data);
