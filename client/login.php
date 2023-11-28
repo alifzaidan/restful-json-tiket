@@ -1,7 +1,6 @@
 <?php
 error_reporting(1);
 include "Client.php";
-require('koneksi.php');
 
 session_start();
 $error = '';
@@ -9,10 +8,8 @@ $error = '';
 if (isset($_SESSION['username'])) header('Location: index.php');
 if (isset($_POST['submit'])) {
 
-    $username = stripslashes($_POST['username']);
-    $username = mysqli_real_escape_string($koneksi, $username);
-    $password = stripslashes($_POST['password']);
-    $password = mysqli_real_escape_string($koneksi, $password);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
     // $query    = "SELECT * FROM pengguna WHERE username = '$username'";
     $query    = $abc->tampil_pengguna_byuser($username);

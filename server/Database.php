@@ -46,6 +46,18 @@ class Database
         unset($id_tiket, $data);
     }
 
+    public function tampil_tiket_byevent($id_event)
+    {
+        $query = $this->conn->prepare("select id_tiket, id_event, kategori, harga, jumlah from tiket where id_event=?");
+        $query->execute(array($id_event));
+        // mengambil satu data dengan fetch
+        $data = $query->fetch(PDO::FETCH_ASSOC);
+        return $data;
+        // hapus variable dari memory
+        $query->closeCursor();
+        unset($id_event, $data);
+    }
+
     public function tampil_pengguna($id_pengguna)
     {
         $query = $this->conn->prepare("select id_pengguna, nama, username, email, no_telp, password from pengguna where id_pengguna=?");

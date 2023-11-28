@@ -96,6 +96,19 @@ class Client
         unset($id_tiket, $client, $response, $data);
     }
 
+    public function tampil_tiket_byevent($id_event)
+    {
+        $id_event = $this->filter($id_event);
+        $client = curl_init($this->url . "servertiket.php?aksi=tampil&id_event=" . $id_event);
+        curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($client);
+        curl_close($client);
+        $data = json_decode($response);
+        return $data;
+
+        unset($id_event, $client, $response, $data);
+    }
+
     public function tampil_pengguna($id_pengguna)
     {
         $id_pengguna = $this->filter($id_pengguna);

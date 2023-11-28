@@ -66,6 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id_tiket = filter($_GET['id_tiket']); // Ubah 'id tiket' menjadi 'id_tiket'
         $data = $abc->tampil_tiket($id_tiket); // Ubah 'tampil data' menjadi 'tampil_data'
         echo json_encode($data);
+    } else if (($_GET['aksi'] == 'tampil') and (isset($_GET['id_event']))) {
+        $id_event = filter($_GET['id_event']); // Ubah 'id tiket' menjadi 'id_tiket'
+        $data = $abc->tampil_tiket_byevent($id_event); // Ubah 'tampil data' menjadi 'tampil_data'
+        echo json_encode($data);
     } else {
         $tiket = $abc->tampil_semua_tiket();
         echo json_encode($tiket);
