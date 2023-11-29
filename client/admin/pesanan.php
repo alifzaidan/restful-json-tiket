@@ -2,21 +2,8 @@
 error_reporting(1);
 include "../Client.php";
 
-// include '../koneksi.php';
-// session_start();
-// $username = $_SESSION['username'];
-// if (!isset($username)) {
-//     $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
-//     header('Location: login.php');
-// }
-// $safe_username = mysqli_real_escape_string($koneksi, $username);
-// $result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
-// $pengguna = mysqli_fetch_assoc($result);
-
 $no = 1;
-$data_pesanan = mysqli_query($koneksi, "SELECT *, (jumlah_tiket1 + jumlah_tiket2 + jumlah_tiket3 + jumlah_tiket4) AS jumlah_tiket FROM pesanan
-JOIN event ON pesanan.id_event = event.id_event
-JOIN pengguna ON pesanan.id_pengguna = pengguna.id_pengguna");
+$data_pesanan = $abc->tampil_semua_pesanan();
 ?>
 
 <!DOCTYPE html>
@@ -35,17 +22,14 @@ JOIN pengguna ON pesanan.id_pengguna = pengguna.id_pengguna");
 <body style="background-color: #EFFEFF;">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top" style="background-color: #304F6D;">
         <div class="container py-1">
-            <a class="navbar-brand text-white" href="../index.php">TicketEase</a>
-
-            <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+            <button class="btn me-4" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
                 <i class="bi bi-list"></i>
             </button>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand text-white" href="../index.php">TicketEase</a>
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <form class="d-flex mx-auto" role="search">
+                <form class="" role="search">
                     <input class="form-control me-2" style="width: 500px;" type="search" id="searchInput" placeholder="Cari Event" aria-label="Search" autocomplete="off" />
                 </form>
             </div>
@@ -72,7 +56,6 @@ JOIN pengguna ON pesanan.id_pengguna = pengguna.id_pengguna");
                     <th scope="col">ID Pesanan</th>
                     <th scope="col">Nama Pelanggan</th>
                     <th scope="col">Nama Event</th>
-                    <th scope="col">Kategori Tiket</th>
                     <th scope="col">Jumlah</th>
                     <th scope="col">Total Harga</th>
                     <th scope="col">Tanggal Pemesanan</th>
@@ -81,47 +64,32 @@ JOIN pengguna ON pesanan.id_pengguna = pengguna.id_pengguna");
             </thead>
             <tbody>
                 <?php
-                while ($pesanan = mysqli_fetch_assoc($data_pesanan)) :
+                foreach ($data_pesanan as $pesanan) :
                 ?>
                     <tr>
                         <td scope="col"><?= $no++ ?></td>
-                        <td scope="col"><?= $pesanan['id_pesanan'] ?></td>
-                        <td scope="col"><?= $pesanan['nama'] ?></td>
-                        <td scope="col"><?= $pesanan['nama_event'] ?></td>
-                        <td scope="col">
-                            <?php
-                            $i = 1;
-                            $data = [];
-                            while ($i <= 4) :
-                                if ($pesanan["jumlah_tiket$i"] > 0) :
-                                    $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,pesanan WHERE tiket.id_tiket='" . $pesanan["id_tiket$i"] . "'");
-                                    $tiket = mysqli_fetch_assoc($data_tiket);
-                                    $data[] = $tiket["kategori"] . " (" . $pesanan["jumlah_tiket$i"] . ")";
-                                endif;
-                                $i++;
-                            endwhile;
-                            echo implode(", ", $data);
-                            ?>
-                        </td>
-                        <td scope="col"><?= $pesanan['jumlah_tiket'] ?></td>
-                        <td scope="col">Rp<?= number_format($pesanan["total_harga"], 0, ',', ',') ?></td>
-                        <td scope="col"><?= date('d F Y', strtotime($pesanan["tgl_pemesanan"])) ?></td>
+                        <td scope="col"><?= $pesanan->id_pesanan ?></td>
+                        <td scope="col"><?= $pesanan->nama ?></td>
+                        <td scope="col"><?= $pesanan->nama_event ?></td>
+                        <td scope="col"><?= $pesanan->jumlah_tiket ?></td>
+                        <td scope="col">Rp<?= number_format($pesanan->total_harga, 0, ',', ',') ?></td>
+                        <td scope="col"><?= date('d F Y', strtotime($pesanan->tgl_pemesanan)) ?></td>
                         <td scope="col">
                             <div class="d-flex justify-content-around gap-2">
-                                <a href="#" class="btn btn-danger btn-circle btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $pesanan["id_pesanan"] ?>">
+                                <a href="#" class="btn btn-danger btn-circle btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $pesanan->id_pesanan ?>">
                                     <i class="bi bi-trash"></i>
                                 </a>
-                                <div class="modal fade" id="hapusModal<?= $pesanan["id_pesanan"] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="hapusModal<?= $pesanan->id_pesanan ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Yakin mau dihapus?</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body">Pilih "Hapus" jika kamu yakin untuk menghapus pesanan <?= $pesanan["nama"] ?> untuk event "<?= $pesanan["nama_event"] ?>".</div>
+                                            <div class="modal-body">Pilih "Hapus" jika kamu yakin untuk menghapus pesanan <?= $pesanan->nama ?> untuk event "<?= $pesanan->nama_event ?>".</div>
                                             <div class="modal-footer">
                                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                                                <a class="btn btn-dark" href="pesanan-hapus-controller.php?id=<?= $pesanan["id_pesanan"] ?>">Hapus</a>
+                                                <a class="btn btn-dark" href="../prosespesanan.php?aksi=hapus&id_pesanan=<?= $pesanan->id_pesanan ?>">Hapus</a>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +97,7 @@ JOIN pengguna ON pesanan.id_pengguna = pengguna.id_pengguna");
                             </div>
                         </td>
                     </tr>
-                <?php endwhile ?>
+                <?php endforeach ?>
             </tbody>
         </table>
     </main>

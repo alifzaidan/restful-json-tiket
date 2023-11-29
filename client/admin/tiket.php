@@ -2,18 +2,8 @@
 error_reporting(1);
 include "../Client.php";
 
-// session_start();
-// $username = $_SESSION['username'];
-// if (!isset($username)) {
-//     $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
-//     header('Location: login.php');
-// }
-// $safe_username = mysqli_real_escape_string($koneksi, $username);
-// $result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
-// $pengguna = mysqli_fetch_assoc($result);
-
 $no = 1;
-$data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_event=event.id_event");
+$data_tiket = $abc->tampil_semua_tiket();
 ?>
 
 <!DOCTYPE html>
@@ -32,17 +22,14 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
 <body style="background-color: #EFFEFF;">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top" style="background-color: #304F6D;">
         <div class="container py-1">
-            <a class="navbar-brand text-white" href="../index.php">TicketEase</a>
-
-            <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+            <button class="btn me-4" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
                 <i class="bi bi-list"></i>
             </button>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand text-white" href="../index.php">TicketEase</a>
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <form class="d-flex mx-auto" role="search">
+                <form class="" role="search">
                     <input class="form-control me-2" style="width: 500px;" type="search" id="searchInput" placeholder="Cari Event" aria-label="Search" autocomplete="off" />
                 </form>
             </div>
@@ -76,20 +63,20 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
             </thead>
             <tbody>
                 <?php
-                while ($tiket = mysqli_fetch_assoc($data_tiket)) :
+                foreach ($data_tiket as $tiket) :
                 ?>
                     <tr>
                         <td scope="col"><?= $no++ ?></td>
-                        <td scope="col"><?= $tiket['nama_event'] ?></td>
-                        <td scope="col"><?= $tiket["kategori"] ?></td>
-                        <td scope="col">Rp<?= number_format($tiket["harga"], 0, ',', ',') ?></td>
-                        <td scope="col"><?= $tiket["jumlah"] ?></td>
+                        <td scope="col"><?= $tiket->nama_event ?></td>
+                        <td scope="col"><?= $tiket->kategori ?></td>
+                        <td scope="col">Rp<?= number_format($tiket->harga, 0, ',', ',') ?></td>
+                        <td scope="col"><?= $tiket->jumlah ?></td>
                         <td scope="col">
                             <div class="d-flex justify-content-around gap-2">
-                                <a href="#" class="btn btn-warning btn-circle btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $tiket["id_tiket"] ?>">
+                                <a href="#" class="btn btn-warning btn-circle btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $tiket->id_tiket ?>">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <div class="modal fade" id="editModal<?= $tiket["id_tiket"] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="editModal<?= $tiket->id_tiket ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -97,27 +84,27 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form class="user d-flex flex-column gap-2" action="tiket-edit-controller.php" method="post">
+                                                <form class="user d-flex flex-column gap-2" action="../prosestiket.php" method="post">
                                                     <input type="hidden" name="aksi" value="ubah" />
-                                                    <input type="hidden" class="form-control" name="id_tiket" value="<?= $tiket["id_tiket"] ?>">
+                                                    <input type="hidden" class="form-control" name="id_tiket" value="<?= $tiket->id_tiket ?>">
                                                     <div class="form-group">
                                                         <select class="form-select" aria-label="Nama Event" name="id_event" required>
                                                             <?php
-                                                            $data_event = mysqli_query($koneksi, "SELECT * FROM event");
-                                                            while ($event = mysqli_fetch_assoc($data_event)) :
+                                                            $data_event = $abc->tampil_semua_event();
+                                                            foreach ($data_event as $event) :
                                                             ?>
-                                                                <option value="<?= $event["id_event"] ?>" <?= ($event["id_event"] == $tiket['id_event']) ? 'selected' : ''; ?>><?= $event["nama_event"] ?></option>
-                                                            <?php endwhile ?>
+                                                                <option value="<?= $event->id_event ?>" <?= ($event->id_event == $tiket->id_event) ? 'selected' : ''; ?>><?= $event->nama_event ?></option>
+                                                            <?php endforeach ?>
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" placeholder="Kategori" name="kategori" value="<?= $tiket["kategori"] ?>" required>
+                                                        <input type="text" class="form-control" placeholder="Kategori" name="kategori" value="<?= $tiket->kategori ?>" required>
                                                     </div>
                                                     <div class=" form-group">
-                                                        <input type="number" class="form-control" placeholder="Harga" name="harga" value="<?= $tiket["harga"] ?>" required>
+                                                        <input type="number" class="form-control" placeholder="Harga" name="harga" value="<?= $tiket->harga ?>" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="number" class="form-control" placeholder="Jumlah" name="jumlah" value="<?= $tiket["jumlah"] ?>" required>
+                                                        <input type="number" class="form-control" placeholder="Jumlah" name="jumlah" value="<?= $tiket->jumlah ?>" required>
                                                     </div>
                                                     <button type="submit" name="tambah" class="btn p-2 mt-3 fw-semibold text-white" style="background-color: #E07D54;">
                                                         Edit
@@ -127,20 +114,20 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#" class="btn btn-danger btn-circle btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $tiket["id_tiket"] ?>">
+                                <a href="#" class="btn btn-danger btn-circle btn-sm" data-bs-toggle="modal" data-bs-target="#hapusModal<?= $tiket->id_tiket ?>">
                                     <i class="bi bi-trash"></i>
                                 </a>
-                                <div class="modal fade" id="hapusModal<?= $tiket["id_tiket"] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="hapusModal<?= $tiket->id_tiket ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Yakin mau dihapus?</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body">Pilih "Hapus" jika kamu yakin untuk menghapus tiket <?= $tiket["kategori"] ?> "<?= $tiket["nama_event"] ?>".</div>
+                                            <div class="modal-body">Pilih "Hapus" jika kamu yakin untuk menghapus tiket <?= $tiket->kategori ?> "<?= $tiket->nama_event ?>".</div>
                                             <div class="modal-footer">
                                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                                                <a class="btn btn-dark" href="tiket-hapus-controller.php?id=<?= $tiket["id_tiket"] ?>">Hapus</a>
+                                                <a class="btn btn-dark" href="../prosestiket.php?aksi=hapus&id_tiket=<?= $tiket->id_tiket ?>">Hapus</a>
                                             </div>
                                         </div>
                                     </div>
@@ -148,7 +135,7 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                             </div>
                         </td>
                     </tr>
-                <?php endwhile ?>
+                <?php endforeach ?>
             </tbody>
         </table>
     </main>
@@ -177,17 +164,17 @@ $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket,event WHERE tiket.id_e
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="user d-flex flex-column gap-2" action="tiket-tambah-controller.php" method="post">
+                    <form class="user d-flex flex-column gap-2" action="../prosestiket.php" method="post">
                         <input type="hidden" name="aksi" value="tambah" />
                         <div class="form-group">
                             <select class="form-select" aria-label="Nama Event" name="id_event" required>
                                 <option>Pilih Event</option>
                                 <?php
-                                $data_event = mysqli_query($koneksi, "SELECT * FROM event");
-                                while ($event = mysqli_fetch_assoc($data_event)) :
+                                $data_event = $abc->tampil_semua_event();
+                                foreach ($data_event as $event) :
                                 ?>
-                                    <option value="<?= $event["id_event"] ?>"><?= $event["nama_event"] ?></option>
-                                <?php endwhile ?>
+                                    <option value="<?= $event->id_event ?>"><?= $event->nama_event ?></option>
+                                <?php endforeach ?>
                             </select>
                         </div>
                         <div class="form-group">

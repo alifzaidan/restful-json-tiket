@@ -255,8 +255,8 @@ class Client
             "harga_awal" : "' . $data['harga_awal'] . '", 
             "tanggal" : "' . $data['tanggal'] . '", 
             "jam" : "' . $data['jam'] . '", 
-            "venue" : "' . $data['venue'] . '", 
-            "deskripsi" : "' . $data['deskripsi'] . '", 
+            "venue" : "' . $data['venue'] . '",
+            "deskripsi" : "' . $data['deskripsi'] . '",
             "aksi": "' . $data['aksi'] . '"
         }';
         $c = curl_init();
@@ -273,12 +273,11 @@ class Client
     public function ubah_tiket($data)
     {
         $data = '{ 
-            "id_pengguna" : "' . $data['id_pengguna'] . '", 
-            "nama" : "' . $data['nama'] . '", 
-            "username" : "' . $data['username'] . '", 
-            "email" : "' . $data['email'] . '", 
-            "no_telp" : "' . $data['no_telp'] . '", 
-            "password" : "' . $data['password'] . '",
+            "id_tiket" : "' . $data['id_tiket'] . '", 
+            "id_event" : "' . $data['id_event'] . '", 
+            "kategori" : "' . $data['kategori'] . '", 
+            "harga" : "' . $data['harga'] . '", 
+            "jumlah" : "' . $data['jumlah'] . '",
             "aksi": "' . $data['aksi'] . '"
         }';
         $c = curl_init();
@@ -295,13 +294,12 @@ class Client
     public function ubah_pengguna($data)
     {
         $data = '{ 
-            "id_event" : "' . $data['id_event'] . '", 
-            "nama_event" : "' . $data['nama_event'] . '", 
-            "harga_awal" : "' . $data['harga_awal'] . '", 
-            "tanggal" : "' . $data['tanggal'] . '", 
-            "jam" : "' . $data['jam'] . '", 
-            "venue" : "' . $data['venue'] . '", 
-            "deskripsi" : "' . $data['deskripsi'] . '", 
+            "id_pengguna" : "' . $data['id_pengguna'] . '", 
+            "nama" : "' . $data['nama'] . '", 
+            "username" : "' . $data['username'] . '", 
+            "email" : "' . $data['email'] . '", 
+            "no_telp" : "' . $data['no_telp'] . '", 
+            "password" : "' . $data['password'] . '",
             "aksi": "' . $data['aksi'] . '"
         }';
         $c = curl_init();

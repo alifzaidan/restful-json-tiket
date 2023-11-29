@@ -13,7 +13,7 @@ if ($_POST['aksi'] == 'tambah') {
         "aksi" => $_POST['aksi']
     );
     $abc->tambah_event($data);
-    header('location:index.php?page=daftar-data');
+    header('location: admin/event.php');
 } else if ($_POST['aksi'] == 'ubah') {
     $data = array(
         "id_event" => $_POST['id_event'],
@@ -26,14 +26,14 @@ if ($_POST['aksi'] == 'tambah') {
         "aksi" => $_POST['aksi']
     );
     $abc->ubah_event($data);
-    header('location: index.php?page=daftar-data');
+    header('location: admin/event.php');
 } else if ($_GET['aksi'] == 'hapus') {
     $data = array(
         "id_event" => $_GET['id_event'],
         "aksi" => $_GET['aksi']
     );
     $abc->hapus_event($data);
-    header('location: index.php?page=daftar-data');
+    header('location: admin/event.php');
 }
 
 unset($abc, $data);

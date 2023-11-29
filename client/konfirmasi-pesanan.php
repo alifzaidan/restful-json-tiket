@@ -2,27 +2,16 @@
 error_reporting(1);
 include "Client.php";
 
-// session_start();
-// $username = $_SESSION['username'];
-// if (!isset($username)) {
-//     $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
-//     header('Location: login.php');
-// }
-// $safe_username = mysqli_real_escape_string($koneksi, $username);
-// $result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
-// $pengguna = mysqli_fetch_assoc($result);
+$id_pengguna = $_POST['id_pengguna'];
+$pengguna = $abc->tampil_pengguna($id_pengguna);
 
 $id_event = $_POST['id_event'];
 $event = $abc->tampil_event($id_event);
-// $data_event = mysqli_query($koneksi, "SELECT * FROM event WHERE id_event=$id_event");
-// $event = mysqli_fetch_assoc($data_event);
 
 $nama_event = $event->nama_event;
 $tanggal = date('d F Y', strtotime($event->tanggal));
 $jam = date('H:i', strtotime($event->jam));
-$gambarSrc = "data:image/*;base64," . base64_encode($event->gambar);
 
-// $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket WHERE id_event=$id_event");
 $data_tiket = $abc->tampil_tiket_byevent($id_event);
 
 ?>
@@ -43,15 +32,12 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
 <body style="background-color: #EFFEFF;">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top" style="background-color: #304F6D;">
         <div class="container py-1">
-            <a class="navbar-brand text-light" href="index.php">TicketEase</a>
-
-            <button class="btn btn-primary ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+            <button class="btn me-4" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
                 <i class="bi bi-list"></i>
             </button>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand text-white" href="index.php">TicketEase</a>
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 
             </div>
@@ -65,19 +51,19 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
                 <form>
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="nama" value="<?= $pengguna['nama'] ?>" disabled>
+                        <input type="text" class="form-control" id="nama" value="<?= $pengguna->nama ?>" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" value="<?= $pengguna['email'] ?>" disabled>
+                        <input type="email" class="form-control" id="email" value="<?= $pengguna->email ?>" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="telp" class="form-label">Nomor Telepon</label>
-                        <input type="number" class="form-control" id="telp" value="<?= $pengguna['no_telp'] ?>" disabled>
+                        <input type="number" class="form-control" id="telp" value="<?= $pengguna->no_telp ?>" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="venue" class="form-label">Venue</label>
-                        <input type="text" class="form-control" id="venue" value="<?= $event['venue'] ?>" disabled>
+                        <input type="text" class="form-control" id="venue" value="<?= $event->venue ?>" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal" class="form-label">Tanggal Pelaksanaan Event</label>
@@ -92,9 +78,7 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
             <div class="col-md-6 col-12">
                 <h3 class="fw-bold pt-5"><?= $nama_event ?></h3>
 
-                <img src="<?= $gambarSrc ?>" alt="<?= $nama_event ?>" class="w-100 mt-3 mb-4 rounded-3" />
-
-                <form action="pesanan-controller.php" method="post">
+                <form action="prosespesanan.php" method="post">
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label">Kategori</label>
@@ -131,7 +115,8 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
                     endwhile;
                     ?>
                     <div class="mb-3">
-                        <input type="hidden" class="form-control" name="id_pengguna" value="<?= $pengguna['id_pengguna'] ?>">
+                        <input type="hidden" name="aksi" value="tambah" />
+                        <input type="hidden" class="form-control" name="id_pengguna" value="<?= $pengguna->id_pengguna ?>">
                         <input type="hidden" class="form-control" name="id_event" value="<?= $id_event ?>">
                         <label for="total" class="form-label">Total</label>
                         <input type="text" class="form-control" value="Rp<?= number_format($_POST["totalKeseluruhan"], 0, ',', ',') ?>" disabled>

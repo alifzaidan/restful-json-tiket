@@ -1,20 +1,9 @@
 <?php
 error_reporting(1);
 include "Client.php";
-// session_start();
-// $username = $_SESSION['username'];
-// if (!isset($username)) {
-//     $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
-//     header('Location: login.php');
-// }
-// $safe_username = mysqli_real_escape_string($koneksi, $username);
-// $result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
-// $pengguna = mysqli_fetch_assoc($result);
 
 $id_event = $_GET['id'];
 $event = $abc->tampil_event($id_event);
-// $data_event = mysqli_query($koneksi, "SELECT * FROM event WHERE id_event=$id_event");
-// $event = mysqli_fetch_assoc($data_event);
 
 $nama_event = $event->nama_event;
 $tanggal = date('d F Y', strtotime($event->tanggal));
@@ -40,15 +29,13 @@ $deskripsi = explode("\n", $teks);
 <body style="background-color: #EFFEFF;">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top text-white" style="background-color: #304F6D;">
         <div class="container py-1">
-            <a class="navbar-brand text-white" href="index.php">TicketEase</a>
 
-            <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+            <button class="btn me-4" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
                 <i class="bi bi-list"></i>
             </button>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand text-white" href="index.php">TicketEase</a>
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 
             </div>
@@ -69,7 +56,7 @@ $deskripsi = explode("\n", $teks);
         <h1 class="fw-bold pt-5 pb-3"><?= $nama_event ?></h1>
         <p class="m-0 py-1"><i class="bi bi-geo-alt-fill me-2"></i><?= $venue ?></p>
         <p class="m-0 py-1"><i class="bi bi-calendar-event-fill me-2"></i><?= $tanggal ?></p>
-        <p class="m-0 py-1"><i class="bi bi-clock-fill me-2"></i><?= $jam ?></p>
+        <p class="mb-3 py-1"><i class="bi bi-clock-fill me-2"></i><?= $jam ?></p>
         <div class="card mb-3">
             <div class="card-body">
                 <p class="card-text">

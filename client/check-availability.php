@@ -2,25 +2,14 @@
 error_reporting(1);
 include "Client.php";
 
-// session_start();
-// $username = $_SESSION['username'];
-// if (!isset($username)) {
-//     $_SESSION['msg'] = 'anda harus login untuk mengakses halaman ini';
-//     header('Location: login.php');
-// }
-// $safe_username = mysqli_real_escape_string($koneksi, $username);
-// $result = mysqli_query($koneksi, "SELECT * FROM pengguna WHERE username='$safe_username'");
-// $pengguna = mysqli_fetch_assoc($result);
-
 $id_event = $_GET['id'];
 $event = $abc->tampil_event($id_event);
-// $data_event = mysqli_query($koneksi, "SELECT * FROM event WHERE id_event=$id_event");
-// $event = mysqli_fetch_assoc($data_event);
 
 $nama_event = $event->nama_event;
 
+$data_pengguna = $abc->tampil_semua_pengguna();
+
 $no = 0;
-// $data_tiket = mysqli_query($koneksi, "SELECT * FROM tiket WHERE id_event=$id_event");
 $data_tiket = $abc->tampil_tiket_byevent($id_event);
 
 ?>
@@ -41,15 +30,12 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
 <body style="background-color: #EFFEFF;">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top" style="background-color: #304F6D;">
         <div class="container py-1">
-            <a class="navbar-brand text-white" href="index.php">TicketEase</a>
-
-            <button class="btn ms-2" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+            <button class="btn me-4" style="background-color: #EFFEFF;" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
                 <i class="bi bi-list"></i>
             </button>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand text-white" href="index.php">TicketEase</a>
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 
             </div>
@@ -61,6 +47,18 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
 
         <form action="konfirmasi-pesanan.php" method="post">
             <input type="hidden" class="form-control" name="id_event" value="<?= $id_event ?>">
+
+            <label class="form-label">Pilih Pengguna</label>
+            <select class="form-select" name="id_pengguna" id="kuantitas" onchange="updateTotal(this, <?= $tiket->harga ?>, <?= $tiket->id_tiket ?>)">
+                <option>Pilih Pengguna</option>
+                <?php
+                $data_pengguna = $abc->tampil_semua_pengguna();
+                foreach ($data_pengguna as $pengguna) :
+                ?>
+                    <option value="<?= $pengguna->id_pengguna ?>"><?= $pengguna->nama ?></option>
+                <?php endforeach ?>
+            </select>
+
             <table class="table">
                 <thead>
                     <tr>
@@ -78,7 +76,7 @@ $data_tiket = $abc->tampil_tiket_byevent($id_event);
                                 <input type="hidden" class="form-control" name="kategori<?= ++$no ?>" value="<?= $tiket->kategori ?>">
                                 <input type="hidden" class="form-control" name="id<?= $no ?>" value="<?= $tiket->id_tiket ?>">
                             </td>
-                            <td>Rp<?= number_format($tiket["harga"], 0, ',', ',') ?></td>
+                            <td>Rp<?= number_format($tiket->harga, 0, ',', ',') ?></td>
                             <td><?php if ($tiket->jumlah == 0) { ?>
                                     <p class="text-danger">Sold Out</p>
                                     <input type="hidden" class="form-control" name="kuantitas<?= $no ?>" value="0">
